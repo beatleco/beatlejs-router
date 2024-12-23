@@ -1,6 +1,6 @@
 import { useService } from 'beatlejs/react';
 import { lazy as ReactLazy, useContext } from 'react';
-import { $Nav } from './$Nav';
+import { $Router } from './$Router';
 import { RouteContext } from './context';
 
 export function Route({
@@ -19,7 +19,7 @@ export function Route({
   skeleton?: any;
 }) {
   const context = useContext(RouteContext);
-  const [svc] = useService([$Nav]);
+  const [svc] = useService([$Router]);
 
   if (context.group && context.default)
     svc.defaults.set(context.group, context.default);

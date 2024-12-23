@@ -1,6 +1,6 @@
 import { useService } from 'beatlejs/react';
-import { $Nav } from './$Nav';
+import { $Router } from './$Router';
 
-export function useNav() {
-  return useService([$Nav])[0];
+export function useRouter() {
+  return useService([$Router])[0];
 }

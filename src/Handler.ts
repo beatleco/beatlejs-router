@@ -1,9 +1,9 @@
 import { useSignal } from 'beatlejs/plugins/signal';
 import React, { Suspense, createElement } from 'react';
-import { $Nav } from './$Nav';
+import { $Router } from './$Router';
 
 export function Handler({ skeleton }: { skeleton?: any }) {
-  const [svc] = useSignal([$Nav]);
+  const [svc] = useSignal([$Router]);
   if (!svc || svc.blueprints.size == 0) return null;
   let el = svc.blueprints.get(svc.head);
   if (!el) {

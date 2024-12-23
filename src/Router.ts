@@ -1,6 +1,6 @@
 import { useService } from 'beatlejs/react';
 import { createElement, type PropsWithChildren } from 'react';
-import { $Nav } from './$Nav';
+import { $Router } from './$Router';
 import { Handler } from './Handler';
 
 export function Router({
@@ -12,7 +12,7 @@ export function Router({
   forced?: boolean;
   default: string | ((current?: string) => string);
 }>) {
-  const [svc] = useService([$Nav]);
+  const [svc] = useService([$Router]);
   svc.blueprints.clear();
   svc.defaults.clear();
   svc.default = typeof def === 'string' ? def : def(svc.head);

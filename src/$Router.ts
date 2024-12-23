@@ -12,7 +12,7 @@ export type WithRouteParams<T = Record<string, any>> = {
   params?: BRouteParams<T>;
 } & T;
 
-export type BBlueprint = {
+export type BRouteBlueprint = {
   group?: string;
   key: string;
   prev?: string;
@@ -29,14 +29,14 @@ type BRouteState = {
 
 const self = Service(
   {
-    identifier: 'Nav',
+    identifier: 'Router',
     version: 2,
   },
   {
     key: signal(val(0)),
     head: persist(val('')),
     props: persist(val(new Map<string, BRouteParams>())),
-    blueprints: val(new Map<string, BBlueprint>()),
+    blueprints: val(new Map<string, BRouteBlueprint>()),
     defaults: val(new Map<string, string | (() => string)>()),
     flow: persist(val<[BRouteState, BRouteState][]>([])),
     default: val(''),
@@ -66,7 +66,7 @@ function resolveHead(this: typeof self) {
   return current;
 }
 
-function resolve(this: typeof self, key: string): BBlueprint | undefined {
+function resolve(this: typeof self, key: string): BRouteBlueprint | undefined {
   const isRoute = key.indexOf('.') !== -1;
   // exact route
   if (isRoute) {
@@ -167,11 +167,11 @@ function startFlow(
   const blueprint = resolve.call(this, key);
   if (!blueprint) return;
   const currentProps = this.props.get(this.head)?.data;
-  const navState = this.flow[this.flow.length - 2];
+  const routeState = this.flow[this.flow.length - 2];
   if (
-    navState &&
-    navState[0].key === blueprint.key &&
-    deepEqual(navState[0].props, currentProps)
+    routeState &&
+    routeState[0].key === blueprint.key &&
+    deepEqual(routeState[0].props, currentProps)
   ) {
     console.log('looping not allowed');
     return;
@@ -233,4 +233,4 @@ function handleHistoryChange(this: typeof self) {
   });
 }
 
-export const $Nav = self;
+export const $Router = self;
