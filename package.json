@@ -1,12 +1,20 @@
 {
   "name": "beatlejs-router",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Aryan Alikhani",
   "description": "Beatlejs router specially designed for PWAs",
   "license": "MIT",
   "type": "module",
+  "homepage": "https://github.com/beatleco/beatlejs-router",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/beatleco/beatlejs-router.git"
+  },
+  "bugs": {
+    "url": "https://github.com/beatleco/beatlejs-router/issues"
+  },
   "scripts": {
     "build": "rimraf -rf ./build && tsc -b",
     "ship": "npm run build && rimraf -rf ./build/tsconfig.tsbuildinfo && rollup -c ./rollup.config.mjs && node ./ship.cjs",
