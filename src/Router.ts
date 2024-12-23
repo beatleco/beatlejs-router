@@ -16,5 +16,8 @@ export function Router({
   svc.blueprints.clear();
   svc.defaults.clear();
   svc.default = typeof def === 'string' ? def : def(svc.head);
-  return [children, createElement(Handler, { skeleton })];
+  return [
+    children,
+    createElement(Handler, { key: 'beatlejs-router', skeleton }),
+  ];
 }
