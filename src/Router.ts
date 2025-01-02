@@ -1,4 +1,4 @@
-import { useService } from 'beatlejs/react';
+import { useService } from 'beatlejs/integrations/react';
 import { createElement, type PropsWithChildren } from 'react';
 import { $Router } from './$Router';
 import { Handler } from './Handler';

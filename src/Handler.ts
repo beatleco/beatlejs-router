@@ -1,4 +1,4 @@
-import { useSignal } from 'beatlejs/plugins/signal';
+import { useSignal } from 'beatlejs/integrations/react';
 import React, { Suspense, createElement } from 'react';
 import { $Router } from './$Router';
 

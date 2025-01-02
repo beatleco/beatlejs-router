@@ -1,4 +1,4 @@
-import { useService } from 'beatlejs/react';
+import { useService } from 'beatlejs/integrations/react';
 import { lazy as ReactLazy, useContext } from 'react';
 import { $Router } from './$Router';
 import { RouteContext } from './context';

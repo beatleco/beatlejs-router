@@ -1,6 +1,6 @@
 import { func, Service, val } from 'beatlejs';
 import { persist } from 'beatlejs/plugins/persist';
-import { signal } from 'beatlejs/plugins/signal';
+import { signal } from 'beatlejs/integrations/react';
 import { deepEqual } from './deepEqual';
 
 export type BRouteParams<T = Record<string, unknown>> = {
