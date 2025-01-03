@@ -1,45 +1,24 @@
-import { func, Service, val } from 'beatlejs';
-import { persist } from 'beatlejs/plugins/persist';
-import { signal } from 'beatlejs/integrations/react';
-import { deepEqual } from './deepEqual';
+import { func, Service, val } from "beatlejs";
+import { signal } from "beatlejs/integrations/react";
+import { persist } from "beatlejs/plugins/persist";
+import { deepEqual } from "./deepEqual";
+import type { BRouteBlueprint, BRouteParams, BRouteState } from "./types";
 
-export type BRouteParams<T = Record<string, unknown>> = {
-  head?: string;
-  data?: T;
-};
-
-export type WithRouteParams<T = Record<string, any>> = {
-  params?: BRouteParams<T>;
-} & T;
-
-export type BRouteBlueprint = {
-  group?: string;
-  key: string;
-  prev?: string;
-  next?: string;
-  component?: any;
-  skeleton?: any;
-};
-
-type BRouteState = {
-  key: string;
-  props?: Record<string, unknown>;
-  prevKey?: string;
-};
 
 const self = Service(
   {
-    identifier: 'Router',
+    identifier: "Router",
     version: 2,
   },
   {
-    key: signal(val(0)),
-    head: persist(val('')),
+    signal: signal(val(0)),
+    head: persist(val("")),
+    context: val<any>(undefined),
     props: persist(val(new Map<string, BRouteParams>())),
     blueprints: val(new Map<string, BRouteBlueprint>()),
     defaults: val(new Map<string, string | (() => string)>()),
     flow: persist(val<[BRouteState, BRouteState][]>([])),
-    default: val(''),
+    default: val(""),
     gotoRoute: func(gotoRoute),
     goBack: func(goBack),
     goNext: func(goNext),
@@ -49,15 +28,21 @@ const self = Service(
     invalidateProps: func(invalidateProps),
     bootstrap: func(bootstrap),
     resolve: func(resolve),
-  },
+    using: func(using),
+  }
 );
 
 function resetScroll() {
-  window.scrollTo({ left: 0, top: 0, behavior: 'instant' });
+  window.scrollTo({ left: 0, top: 0, behavior: "instant" });
 }
 
 function bootstrap(this: typeof self) {
   handleHistoryChange.call(this);
+}
+
+function using(this: typeof self, value: any) {
+  this.context = value;
+  return this;
 }
 
 function resolveHead(this: typeof self) {
@@ -67,7 +52,7 @@ function resolveHead(this: typeof self) {
 }
 
 function resolve(this: typeof self, key: string): BRouteBlueprint | undefined {
-  const isRoute = key.indexOf('.') !== -1;
+  const isRoute = key.indexOf(".") !== -1;
   // exact route
   if (isRoute) {
     let blueprint = this.blueprints.get(key);
@@ -79,7 +64,7 @@ function resolve(this: typeof self, key: string): BRouteBlueprint | undefined {
   // fallback for defaults in root
   let def = this.defaults.get(key);
   if (def) {
-    def = typeof def === 'string' ? def : def();
+    def = typeof def === "string" ? def : def();
     return this.resolve(`${key}.${def}`);
   }
   // look for neighbors
@@ -91,7 +76,7 @@ function resolve(this: typeof self, key: string): BRouteBlueprint | undefined {
 function moveTo(
   this: typeof self,
   next: string,
-  nextProps?: Record<string, unknown>,
+  nextProps?: Record<string, unknown>
 ) {
   if (this.head === next) {
     const props = this.props.get(next);
@@ -105,10 +90,10 @@ function moveTo(
   }
   resetScroll();
   this.head = next;
-  this.key++;
+  this.signal++;
 }
 function cleanProps(this: typeof self, current: string) {
-  const group = current.split('.')[0];
+  const group = current.split(".")[0];
   this.props.forEach((_, key) => {
     if (key.indexOf(group) === 0) {
       this.props.delete(key);
@@ -118,8 +103,8 @@ function cleanProps(this: typeof self, current: string) {
 function validateFlow(this: typeof self, key: string) {
   if (this.flow.length) {
     const [, next] = this.flow[this.flow.length - 1];
-    const g1 = next.key.split('.')[0];
-    const g2 = key.split('.')[0];
+    const g1 = next.key.split(".")[0];
+    const g2 = key.split(".")[0];
     if (g1 !== g2) {
       this.flow = [];
       cleanProps.call(this, this.head);
@@ -130,7 +115,7 @@ function validateFlow(this: typeof self, key: string) {
 function gotoRoute(
   this: typeof self,
   key: string,
-  props?: Record<string, unknown>,
+  props?: Record<string, unknown>
 ) {
   const blueprint = resolve.call(this, key);
   if (!blueprint) return;
@@ -142,7 +127,7 @@ function gotoRoute(
 function goBack(this: typeof self, props?: Record<string, any>) {
   const blueprint = this.blueprints.get(this.head);
   if (!blueprint || !blueprint.prev) return false;
-  if (blueprint.prev === 'exit') {
+  if (blueprint.prev === "exit") {
     return this.finishFlow();
   }
   if (!this.blueprints.get(blueprint.prev)) return false;
@@ -153,7 +138,7 @@ function goBack(this: typeof self, props?: Record<string, any>) {
 function goNext(this: typeof self, props?: Record<string, any>) {
   const blueprint = this.blueprints.get(this.head);
   if (!blueprint || !blueprint.next) return;
-  if (blueprint.next === 'exit' && this.finishFlow()) return;
+  if (blueprint.next === "exit" && this.finishFlow()) return;
   if (!this.blueprints.get(blueprint.next)) return;
   moveTo.call(this, blueprint.next, props);
   addHistory.call(this, blueprint.next);
@@ -162,7 +147,7 @@ function goNext(this: typeof self, props?: Record<string, any>) {
 function startFlow(
   this: typeof self,
   key: string,
-  props?: Record<string, any>,
+  props?: Record<string, any>
 ) {
   const blueprint = resolve.call(this, key);
   if (!blueprint) return;
@@ -173,11 +158,11 @@ function startFlow(
     routeState[0].key === blueprint.key &&
     deepEqual(routeState[0].props, currentProps)
   ) {
-    console.log('looping not allowed');
+    console.log("looping not allowed");
     return;
   }
   if (blueprint.key === this.head && deepEqual(currentProps, props)) {
-    console.log('already in flow');
+    console.log("already in flow");
     return;
   }
   this.flow.push([
@@ -216,19 +201,19 @@ function invalidateProps(this: typeof self) {
 
 function addHistory(this: typeof self, state: string) {
   const newState = `#${state}_${Math.random()}`;
-  window.history.pushState(newState, '');
+  window.history.pushState(newState, "");
 }
 
 function handleHistoryChange(this: typeof self) {
   for (let i = 0; i < Math.max(0, 25 - window.history.length); i++) {
     const newState = `#${this.head}_${Math.random()}`;
-    window.history.pushState(newState, '');
+    window.history.pushState(newState, "");
   }
   this.flow.forEach(() => {
     const newState = `#${this.head}_${Math.random()}`;
-    window.history.pushState(newState, '');
+    window.history.pushState(newState, "");
   });
-  window.addEventListener('popstate', () => {
+  window.addEventListener("popstate", () => {
     this.goBack();
   });
 }
