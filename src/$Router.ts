@@ -23,12 +23,13 @@ const self = Service(
     goBack: func(goBack),
     goNext: func(goNext),
     startFlow: func(startFlow),
+    replaceFlow: func(replaceFlow),
     finishFlow: func(finishFlow),
     IsFlowInProgress: func(IsFlowInProgress),
     invalidateProps: func(invalidateProps),
     bootstrap: func(bootstrap),
     resolve: func(resolve),
-    using: func(using),
+    withComposition: func(withComposition),
   }
 );
 
@@ -40,7 +41,7 @@ function bootstrap(this: typeof self) {
   handleHistoryChange.call(this);
 }
 
-function using(this: typeof self, value: any) {
+function withComposition(this: typeof self, value: any) {
   this.context = value;
   return this;
 }
@@ -173,6 +174,14 @@ function startFlow(
   addHistory.call(this, blueprint.key);
 }
 
+function replaceFlow(this: typeof self,
+  key: string,
+  props?: Record<string, any>) {
+  if (this.flow.length) {
+    this.flow.pop();
+  }
+  return this.startFlow(key, props);
+}
 function finishFlow(this: typeof self, changedProps?: Record<string, any>) {
   if (this.flow.length === 0) return false;
   const [prev] = this.flow.pop()!;

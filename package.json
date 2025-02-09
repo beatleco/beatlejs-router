@@ -1,6 +1,6 @@
 {
   "name": "beatlejs-router",
-  "version": "1.0.45",
+  "version": "1.0.48",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Aryan Alikhani",
@@ -40,7 +40,7 @@
     "typescript": "^5.7.2"
   },
   "peerDependencies": {
-    "beatlejs": "^1.0.0",
-    "react": "^18.0.0"
+    "beatlejs": ">=1.0.0",
+    "react": ">=18.0.0"
   }
 }
