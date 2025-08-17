@@ -1,6 +1,6 @@
 import { useService } from 'beatlejs/integrations/react';
 import { createElement, type PropsWithChildren } from 'react';
-import { $Router } from './$Router';
+import { RouterService } from './RouterService';
 import { Handler } from './Handler';
 import type { BCompositor } from './types';
 
@@ -15,7 +15,7 @@ export function Router({
   default: string | ((current?: string) => string);
   compositor?: BCompositor,
 }>) {
-  const [svc] = useService([$Router]);
+  const [svc] = useService([RouterService]);
   svc.blueprints.clear();
   svc.defaults.clear();
   svc.default = typeof def === 'string' ? def : def(svc.head);

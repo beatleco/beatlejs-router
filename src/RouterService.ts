@@ -227,4 +227,4 @@ function handleHistoryChange(this: typeof self) {
   });
 }
 
-export const $Router = self;
+export const RouterService = self;

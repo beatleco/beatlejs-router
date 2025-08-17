@@ -1,6 +1,6 @@
 import { useService } from 'beatlejs/integrations/react';
-import { $Router } from './$Router';
+import { RouterService } from './RouterService';
 
 export function useRouter() {
-  return useService([$Router])[0];
+  return useService([RouterService])[0];
 }

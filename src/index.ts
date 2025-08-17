@@ -1,4 +1,4 @@
-export * from "./$Router";
+export * from "./RouterService";
 export * from "./Router";
 export * from "./Group";
 export * from "./Route";

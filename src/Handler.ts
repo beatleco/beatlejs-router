@@ -1,6 +1,6 @@
 import { useSignal } from "beatlejs/integrations/react";
 import React, { Suspense, createElement, useMemo, useRef } from "react";
-import { $Router } from "./$Router";
+import { RouterService } from "./RouterService";
 import type { BCompositor } from "./types";
 
 export function Handler({
@@ -10,7 +10,7 @@ export function Handler({
   skeleton?: any;
   compositor?: BCompositor;
 }) {
-  const [svc] = useSignal([$Router]);
+  const [svc] = useSignal([RouterService]);
   const current = useMemo(() => {
     if (!svc || svc.blueprints.size == 0) return null;
     let el = svc.blueprints.get(svc.head);
